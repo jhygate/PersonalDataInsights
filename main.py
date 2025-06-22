@@ -25,7 +25,7 @@ class Book(BaseModel):
     book_id: Optional[str] = uuid4().hex
 
 class Location(BaseModel):
-    time: str
+    time: float
     lat: float
     lng: float
 
