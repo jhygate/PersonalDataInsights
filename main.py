@@ -15,9 +15,16 @@ class Book(BaseModel):
     price: float
     book_id: Optional[str] = uuid4().hex
 
+class Location(BaseModel):
+    timestamp: str
+    location: Literal["fiction", "non-fiction"]
+
 
 BOOKS_FILE = "books.json"
 BOOKS = []
+
+LOCATIONS_FILE = "locations.json"
+LOCATIONS = []
 
 if os.path.exists(BOOKS_FILE):
     with open(BOOKS_FILE, "r") as f:
@@ -55,6 +62,22 @@ async def add_book(book: Book):
         json.dump(BOOKS, f)
 
     return {"book_id": book.book_id}
+
+@app.post("/add-location")
+async def add_location(location: Location):
+    json_location = jsonable_encoder(location)
+    BOOKS.append(json_location)
+
+    with open(LOCATIONS_FILE, "w") as f:
+        json.dump(LOCATIONS, f)
+
+    return {}
+
+@app.get("/get-locations")
+async def get_locations():
+    return LOCATIONS
+
+
 
 
 @app.get("/get-book")
