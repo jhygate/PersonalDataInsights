@@ -66,7 +66,7 @@ async def add_book(book: Book):
 @app.post("/add-location")
 async def add_location(location: Location):
     json_location = jsonable_encoder(location)
-    BOOKS.append(json_location)
+    LOCATIONS.append(json_location)
 
     with open(LOCATIONS_FILE, "w") as f:
         json.dump(LOCATIONS, f)
