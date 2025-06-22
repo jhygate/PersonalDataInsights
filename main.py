@@ -4,6 +4,7 @@ import random
 import logging
 from uuid import uuid4
 from typing import Literal, Optional
+from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
@@ -25,7 +26,7 @@ class Book(BaseModel):
     book_id: Optional[str] = uuid4().hex
 
 class Location(BaseModel):
-    time: float
+    time: float  # milliseconds since epoch
     lat: float
     lng: float
 
@@ -89,9 +90,16 @@ async def add_location(location: Location):
 
 @app.get("/get-locations")
 async def get_locations():
-    # Return locations sorted by time in descending order
+    # Return locations sorted by time in descending order, converting ms timestamp to ISO datetime
     sorted_locations = sorted(LOCATIONS, key=lambda x: x["time"], reverse=True)
-    return sorted_locations
+    converted = []
+    for loc in sorted_locations:
+        # Convert milliseconds to seconds and then to datetime
+        dt = datetime.fromtimestamp(loc["time"] / 1000.0)
+        loc_copy = loc.copy()
+        loc_copy["time"] = dt.isoformat()
+        converted.append(loc_copy)
+    return converted
 
 @app.get("/get-book")
 async def get_book(book_id: str):
