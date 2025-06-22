@@ -89,7 +89,9 @@ async def add_location(location: Location):
 
 @app.get("/get-locations")
 async def get_locations():
-    return LOCATIONS
+    # Return locations sorted by time in descending order
+    sorted_locations = sorted(LOCATIONS, key=lambda x: x["time"], reverse=True)
+    return sorted_locations
 
 @app.get("/get-book")
 async def get_book(book_id: str):
