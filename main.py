@@ -16,8 +16,9 @@ class Book(BaseModel):
     book_id: Optional[str] = uuid4().hex
 
 class Location(BaseModel):
-    timestamp: str
-    location: Literal["fiction", "non-fiction"]
+    time: str
+    lat: float
+    lng: float
 
 
 BOOKS_FILE = "books.json"
